@@ -4,6 +4,10 @@ import java.io.Reader;
 import java.util.List;
 
 import com.google.gson.*;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class Luke {
 
@@ -27,7 +31,7 @@ public class Luke {
 
         @Override
         public String toString() {
-            return "User{" +
+            return "User {" +
                     "name='" + name + ", height=" + height + ", mass=" + mass + ", hair_color=" + hair_color +
                     ", skin_color=" + skin_color + ", eye_color=" + eye_color + ", birth_year=" + birth_year +
                     ", gender=" + gender + ", homeworld=" + homeworld + ", films=" + films + ", species=" + species +
@@ -36,8 +40,8 @@ public class Luke {
         }
     }
 
-    public static void main(String[] args) {
-        //Создаем эклемпляр Luke
+    public static void main(String[] args) throws UnirestException {
+       /* //Создаем эклемпляр Luke
         UserLuke luke = new UserLuke();
         //Создаем экземпляр Gson
         Gson gson = new Gson();
@@ -47,6 +51,14 @@ public class Luke {
             System.out.println(luke);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        HttpResponse<JsonNode> jsonResponse = Unirest.get(
+                "http://swapi.co/api/people/1/ ").asJson();
+        Gson gson = new Gson();
+        String stack = jsonResponse.getBody().getObject().toString();
+        UserLuke Luke;
+        Luke = gson.fromJson(stack, UserLuke.class);
+        System.out.println(Luke);
     }
 }
